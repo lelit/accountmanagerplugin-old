@@ -9,30 +9,16 @@ from setuptools import setup
 
 extra = {}
 
-has_trac_extract_python = False
 try:
-    from trac.util.dist import get_l10n_cmdclass
-    try:
-        from trac.dist import get_l10n_trac_cmdclass
-        cmdclass = get_l10n_trac_cmdclass()
-        has_trac_extract_python = True
-    except ImportError:
-        # Trac < 1.0, using other compatibility code here.
-        cmdclass = get_l10n_cmdclass()
-    if cmdclass:
-        extra['cmdclass'] = cmdclass
-        extractors = [
-            ('**/templates/**.html', 'genshi', None),
-        ]
-        if has_trac_extract_python:
-            extractors.append(
-                ('**.py', 'trac.dist:extract_python', None))
-        else:
-            extractors.append(
-                ('**.py', 'acct_mgr.compat:extract_python', None))
-        extra['message_extractors'] = {
-            'acct_mgr': extractors,
-        }
+    from trac.dist import get_l10n_cmdclass
+    extra['cmdclass'] = get_l10n_cmdclass()
+    extractors = [
+        ('**/templates/**.html', 'genshi', None),
+        ('**.py', 'acct_mgr.compat:extract_python', None),
+    ]
+    extra['message_extractors'] = {
+        'acct_mgr': extractors,
+    }
 # Trac < 0.12, i18n is implemented to be optional here.
 except ImportError:
     pass
